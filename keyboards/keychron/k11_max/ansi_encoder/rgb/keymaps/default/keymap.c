@@ -20,13 +20,13 @@
 #include "keymap.h" // All custom keycodes and aliases can be found in keymap.h
 #include "g/keymap_combo.h" // To use dict to maintain combos
 
-enum layers{
-	MAC_BASE,
-	WIN_BASE,
-	MAC_FN1,
-	WIN_FN1,
-	FN2,
-};
+// enum layers{
+// 	MAC_BASE,
+// 	WIN_BASE,
+// 	MAC_FN1,
+// 	WIN_FN1,
+// 	FN2,
+// };
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -103,5 +103,24 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (!process_record_keychron_common(keycode, record)) {
         return false;
     }
+
+    switch (keycode) {
+
+        case KC_NOTEPAD:
+        if (record->event.pressed) {
+            register_code(KC_LGUI);
+            // tap_code(KC_R);
+            SEND_STRING(SS_TAP(X_R) SS_DELAY(25));
+            unregister_code(KC_LGUI);
+            SEND_STRING("notepad" SS_DELAY(25) SS_TAP(X_ENT));
+            // tap_code(KC_ENT);
+        } else {
+            // when keycode is released
+        }
+        return false;
+        break;
+
+    }
+
     return true;
 }

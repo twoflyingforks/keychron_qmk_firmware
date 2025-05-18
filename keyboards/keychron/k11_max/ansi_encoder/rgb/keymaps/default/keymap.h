@@ -24,3 +24,16 @@
 // #define RHR_RSFT_E RSFT_T(KC_E)
 // #define RHR_LALT_I LALT_T(KC_I)
 // #define RHR_RGUI_O RGUI_T(KC_O)
+
+enum layers {
+    MAC_BASE,
+    WIN_BASE,
+    _NAV,
+    MAC_FN1,
+    WIN_FN1,
+    FN2,
+};
+
+enum custom_keycodes {
+    KC_NOTEPAD = SAFE_RANGE,
+};
