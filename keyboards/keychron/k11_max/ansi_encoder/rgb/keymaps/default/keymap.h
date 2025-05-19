@@ -1,7 +1,10 @@
 #define OSM_LSFT OSM(MOD_LSFT)
 #define OSM_RSFT OSM(MOD_RSFT)
 
-
+#define C_LEFT C(KC_LEFT)
+#define C_RGHT C(KC_RGHT)
+#define S_LEFT S(KC_LEFT)
+#define S_RGHT S(KC_RGHT)
 
 #define KC_ENDX KC_END
 #define KC_UPXX KC_UP
