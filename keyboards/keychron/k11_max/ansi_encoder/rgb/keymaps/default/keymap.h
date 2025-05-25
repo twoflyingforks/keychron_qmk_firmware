@@ -18,6 +18,8 @@
 #define RTH_MAIN_FAR OSM_RSFT
 #define RTH_MAIN_HOME RTH_NAV_BSPC
 
+#define LSFT_ESC LSFT_T(KC_ESC)
+
 // #define LHR_LGUI_A LGUI_T(KC_A)
 // #define LHR_LALT_R LALT_T(KC_R)
 // #define LHR_LSFT_S LSFT_T(KC_S)

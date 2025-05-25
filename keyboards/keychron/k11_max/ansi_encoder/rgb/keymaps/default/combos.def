@@ -1,5 +1,6 @@
 COMB(cmb_ent,              KC_ENT,            KC_D, LTH_MAIN_HOME)
-COMB(cmb_cbspc,            C(KC_BSPC),        KC_K, RTH_MAIN_HOME)
+// COMB(cmb_cbspc,            C(KC_BSPC),        KC_K, RTH_MAIN_HOME)
+COMB(cmb_del,            KC_DEL,        KC_K, RTH_MAIN_HOME)
 COMB(cmb_left,              KC_LEFT,            LTH_MAIN_HOME, KC_A)
 COMB(cmb_down,              KC_DOWN,            LTH_MAIN_HOME, KC_R)
 COMB(cmb_up,                KC_UPXX,            LTH_MAIN_HOME, KC_S)
