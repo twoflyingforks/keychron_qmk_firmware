@@ -47,9 +47,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [WIN_BASE] = LAYOUT_69_ansi(
         KC_HOME,  KC_1,	   KC_2,	 KC_3,	  KC_4,       KC_5,	KC_6,  KC_7,     KC_8,	KC_9,	 KC_0,	   KC_MINS,  KC_EQL,   KC_END,          KC_MUTE,
         KC_GRV ,  KC_Q,	   KC_W,	 KC_F,	  KC_P,       KC_B,	       KC_J,	 KC_L,  KC_U,	 KC_Y,	 KC_SCLN,  KC_LBRC,  KC_RBRC,  KC_BSLS,          KC_PGUP,
-        KC_TAB ,  KC_A,	   KC_R,	 KC_S,	  KC_T,       KC_G,        KC_M,     KC_N,	KC_E,	 KC_I,	   KC_O,  KC_MINS,  XXXXXXX,           KC_PGDN,
-        LSFT_ESC, KC_Z,	   KC_X,	 KC_C,    KC_D,	      KC_V,	       KC_V,     KC_K,	KC_H,	 KC_COMM,  KC_DOT,	 KC_SLSH,  KC_QUOT, KC_UP,
-        KC_LCTL,  KC_LWIN, KC_LALT,           LTH_MAIN_HOME,     LTH_MAIN_FAR,    RTH_MAIN_FAR, RTH_MAIN_HOME,            MO(FN2),            KC_LEFT, KC_DOWN, KC_RGHT),
+        KC_TAB ,  LHR_LGUI_A,	   LHR_LALT_R,	 LHR_LSFT_S,	  LHR_LCTL_T,       KC_G,        KC_M,     RHR_RCTL_N,	RHR_RSFT_E,	 RHR_LALT_I,	   RHR_RGUI_O,  KC_MINS,  XXXXXXX,           KC_PGDN,
+        LSFT_ESC, KC_Z,	   KC_X,	 KC_C,    KC_D,	      KC_VL,	       KC_VR,     KC_K,	KC_H,	 KC_COMM,  KC_DOT,	 KC_SLSH,  KC_QUOT, KC_UP,
+        KC_LCTL,  KC_LWIN, LTH_MAIN_NEAR,           LTH_MAIN_HOME,     LTH_MAIN_FAR,    RTH_MAIN_FAR, RTH_MAIN_HOME,            RTH_MAIN_NEAR,            KC_LEFT, KC_DOWN, KC_RGHT),
 
     [_NAV] = LAYOUT_69_ansi(
         _______, _______,  _______,  _______, _______, _______, _______,  _______, _______, _______, _______,  _______,  _______,  _______,          _______,
@@ -124,3 +124,88 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     return true;
 }
+
+bool get_chordal_hold(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record,
+                      uint16_t other_keycode, keyrecord_t* other_record) {
+    // Exceptionally consider the following chords as holds.
+    // true: consider the tap-hold key held
+    // false: consider it tapped.
+
+    switch (tap_hold_keycode) {
+        case LHR_LGUI_A:
+            if (other_keycode == KC_D ||
+                other_keycode == KC_TAB ||
+                other_keycode == KC_V ||
+                other_keycode == KC_ENT) {
+                return true;
+            }
+            break;
+
+        case LHR_LALT_R:
+            if (other_keycode == KC_TAB ||
+            other_keycode == LTH_MAIN_HOME) {
+                return true;
+            }
+            break;
+
+        case LHR_LSFT_S:
+            if ((get_mods() & MOD_BIT(KC_LGUI)) || (get_mods() & MOD_BIT(KC_LALT)) || (get_mods() & MOD_BIT(KC_LCTL))) {
+                return true;
+            } else if (other_keycode == KC_TAB) {
+                return true;
+            } else { // To disable shift behaviour if shift is singly pressed
+                return false;
+            }
+            break;
+
+        case LHR_LCTL_T:
+            if (other_keycode == KC_W ||
+                other_keycode == KC_F ||
+                other_keycode == LHR_LGUI_A ||
+                other_keycode == LHR_LALT_R ||
+                other_keycode == LHR_LSFT_S ||
+                other_keycode == KC_Z ||
+                other_keycode == KC_X ||
+                other_keycode == KC_B ||
+                other_keycode == KC_G ||
+                other_keycode == LTH_MAIN_NEAR ||
+                other_keycode == KC_V ||
+                other_keycode == LTH_MAIN_HOME ||
+                other_keycode == KC_ENT) {
+                return true;
+            }
+            break;
+
+        case RHR_RCTL_N:
+            if (other_keycode == KC_H) { // exceptional handling for this as i seem to be pressing ctrl h by accident, not sure why return opposite hand isnt triggering
+                return false;
+            }
+            break;
+
+        case RHR_RSFT_E:
+            if ((get_mods() & MOD_BIT(KC_RGUI)) || (get_mods() & MOD_BIT(KC_RALT)) || (get_mods() & MOD_BIT(KC_RCTL))) {
+                return true;
+            } else if (other_keycode == KC_TAB) {
+                return true;
+            } else {
+                return false; // To disable shift behaviour if shift is singly pressed
+            }
+            break;
+
+        case LTH_MAIN_HOME:
+        case RTH_MAIN_HOME:
+            return true;
+
+        break;
+    }
+    // Otherwise defer to the opposite hands rule.
+    return get_chordal_hold_default(tap_hold_record, other_record);
+}
+
+const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM =
+LAYOUT_69_ansi(
+    'L',  'L',	   'L',	 'L',	  'L',       'L',	'L',  'R',     'R',	'R',	 'R',	   'R',  'R',   'R',          'R',
+    'L' ,  'L',	   'L',	 'L',	  'L',       'L',	       'R',	 'R',  'R',	 'R',	 'R',  'R',  'R',  'R',          'R',
+    'L' ,  'L',	   'L',	 'L',	  'L',       'L',        'R',     'R',	'R',	 'R',	   'R',  'R',  'R',           'R',
+    'L', 'L',	   'L',	 'L',    'L',	      'L',	       'R',     'R',	'R',	 'R',  'R',	 'R',  'R', 'R',
+    'L',  'L', 'L',           'L',     'L',    'R', 'R',            'R',            'R', 'R', 'R');

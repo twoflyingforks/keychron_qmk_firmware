@@ -55,3 +55,8 @@
 #    define RGB_MATRIX_FRAMEBUFFER_EFFECTS
 
 #endif
+
+#define CHORDAL_HOLD
+#define FLOW_TAP_TERM 150
+#define CAPS_WORD_IDLE_TIMEOUT 1000 // Turn off Caps Word after 1 seconds.
+
